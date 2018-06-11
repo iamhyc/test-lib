@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <sys/time.h>
 #include <sys/socket.h>
 
-#define DST_PORT 13425 //magic number
+#define DST_PORT 12435 //magic number
 #define BUFLEN   1024
 
 int main(int argc, char const *argv[])
@@ -14,6 +15,7 @@ int main(int argc, char const *argv[])
     char buf[BUFLEN];
     socklen_t slen;
     int sock, recvlen;
+    struct timeval tstamp;
 
     if ((sock=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == -1)
     {
@@ -34,13 +36,15 @@ int main(int argc, char const *argv[])
 
     while(1)
     {
+        memset(buf, 0, sizeof(buf));
         if ( (recvlen=recvfrom(sock, buf, BUFLEN, 0, (struct sockaddr*)&si_remote, &slen)) < 0)
         {
             perror("recv error");
         }
         else{
-            //cope with data here
-            continue;
+            gettimeofday(&tstamp, NULL);
+            //display content here
+            printf("%s[%ld.%06ld]\n", buf, tstamp.tv_sec, tstamp.tv_usec);
         }
     }
 
