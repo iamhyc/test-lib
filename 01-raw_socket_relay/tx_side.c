@@ -6,8 +6,45 @@
 #include <sys/time.h>
 #include <sys/socket.h>
 
-#define DST_PORT 12435 //magic number
+#define DST_PORT 12222 //magic number
 #define BUFLEN   1024
+
+static const int ENABLE = 1;
+static const int DISABLE = 0;
+static const int SI_SIZE = sizeof(struct sockaddr_in);
+static const int MAXSIZE = 256*1024;
+
+int set_rawsocket(void)
+{
+    int sock;
+
+    if( (sock = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
+    {
+        perror("Failed to create raw socket");
+        return -1;
+    }
+
+    if(setsockopt(sock, SOL_SOCKET, SO_DONTROUTE, &ENABLE, sizeof(int)) < 0)
+    {
+        perror("Failed to set raw_socket DONTROUTE");
+        return -1;
+    }
+
+    return 0;
+}
+
+int set_udpsocket(void)
+{
+    int sock;
+
+    if( (sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) < 0)
+    {
+        perror("Failed to create udp socket");
+        return -1;
+    }
+
+    return sock;
+}
 
 int main(int argc, char const *argv[])
 {
@@ -29,7 +66,7 @@ int main(int argc, char const *argv[])
 
     while(1)
     {
-        usleep(0.1E6);
+        usleep(0.1E6); //0.1 s
 
         cnt ++;
         gettimeofday(&tstamp, NULL);
