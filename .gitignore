@@ -1,2 +1,7 @@
 .vscode/
+
+# for python
+*.pyc
+
+# for C/C++
 *.o

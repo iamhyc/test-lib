@@ -2,15 +2,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include <linux/ip.h>
-#include <linux/tcp.h>
-#include <linux/udp.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
+#include <net/ethernet.h>
+#include "raw_sock.h"
 
 #define RAW_PORT 12222
 #define UDP_PORT 12306
-#define BUFLEN   1500
+#define BUFLEN   65536
 
 // static const int ENABLE = 1;
 // static const int DISABLE = 0;
@@ -20,20 +17,10 @@ static const int SI_SIZE = sizeof(struct sockaddr_in);
 int set_rawsocket(void)
 {
     int sock;
-    struct sockaddr_in si_me;
 
-    if( (sock = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
+    if( (sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_IP))) < 0)
     {
         perror("Failed to create raw socket");
-        return -1;
-    }
-
-    si_me.sin_family = AF_INET;
-    si_me.sin_port = htons(RAW_PORT);
-    si_me.sin_addr.s_addr = htonl(INADDR_ANY);
-    if (bind(sock, (struct sockaddr *)&si_me, SI_SIZE) < 0)
-    {
-        perror("Failed to set raw_socket binding");
         return -1;
     }
 
@@ -56,10 +43,13 @@ int set_udpsocket(void)
 
 int main(int argc, char const *argv[])
 {
-    struct sockaddr_in si_local, si_remote;
+    struct sockaddr_in si_local;
     int rawfd, udpfd, recv_len; 
-    socklen_t slen;
     char buf[BUFLEN];
+    socklen_t saddr_len;
+    struct sockaddr saddr;
+    // struct ethhdr *eth;
+    struct iphdr *iph;
 
     if ( ((rawfd = set_rawsocket()) < 0) || ((udpfd = set_udpsocket()) < 0) )
     {
@@ -71,23 +61,29 @@ int main(int argc, char const *argv[])
     si_local.sin_port = htons(UDP_PORT);
     si_local.sin_addr.s_addr = htonl(INADDR_ANY);
 
+    // recv_len = recvfrom(rawfd, buf, 65536, 0, &saddr, &saddr_len);
+
     while(1)
     {
-        memset(buf, 0, sizeof(buf));
-        if ( (recv_len=recvfrom(rawfd, buf, BUFLEN, 0, (struct sockaddr*)&si_remote, &slen)) < 0)
+        // memset(buf, 0, sizeof(buf));
+        if ( (recv_len=recvfrom(rawfd, buf, BUFLEN, 0, &saddr, &saddr_len)) < 0)
         {
             perror("raw_socket receive error");
             break;
         }
-        else if (sendto(udpfd, buf, recv_len, 0, (struct sockaddr *)&si_local, SI_SIZE) < 0)
-        {
-            perror("udp_socket send error");
-            break;
-        }
         else
         {
-            //successful
-            continue;
+            iph = (struct iphdr*)(buf + sizeof(struct ethhdr));
+
+            if (GET_DEST(iph)==RAW_PORT)
+            {
+                if (sendto(udpfd, iph, recv_len, 0, (struct sockaddr *)&si_local, SI_SIZE) < 0)
+                {
+                    perror("udp_socket send error");
+                    break;
+                }
+                printf("I AM HERE\n");
+            }
         }
     }
 

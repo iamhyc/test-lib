@@ -21,4 +21,4 @@ Rx_Side: UDP_Rx (12306) + Raw_Socket_Tx (13333)
 * Finally, `make ncat-tx` and input text in the console
 
 ###TODO
-* jitter caculation (ncat --> python)
+- [x] jitter caculation (ncat --> python)

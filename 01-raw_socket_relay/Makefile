@@ -13,7 +13,7 @@ clean:
 	$(RM) ,*.sw? $(OBJS)
 
 ncat-tx:
-	ncat -u4 localhost 12222 < ./input_file
+	ncat -u4 localhost 12222
 
 ncat-rx:
 	ncat -u4 -l localhost 13333
