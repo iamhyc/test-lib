@@ -13,7 +13,7 @@ def main():
         cnt += 1
         buf = "%6d|%.06f"%(cnt, time())
         print(buf)
-        sock.sendto(buf, ('127.0.0.1', TX_PORT))
+        sock.sendto(buf, ('192.168.1.14', TX_PORT))
         pass
     pass
 

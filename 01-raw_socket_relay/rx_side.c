@@ -24,11 +24,12 @@ int set_rawsocket(void)
         return -1;
     }
 
-    if(setsockopt(sock, SOL_SOCKET, SO_DONTROUTE, &ENABLE, sizeof(int)) < 0)
+    // NOTE: not necessary
+    /* if(setsockopt(sock, SOL_SOCKET, SO_DONTROUTE, &ENABLE, sizeof(int)) < 0)
     {
         perror("Failed to set raw_socket DONTROUTE");
         return -1;
-    }
+    } */
 
     return sock;
 }
@@ -94,7 +95,8 @@ int main(int argc, char const *argv[])
         {
             iph = (struct iphdr *)buf;
             *(GET_DESTP(iph)) = htons(RAW_PORT);
-            iph->check = 0;
+            // iph->daddr = inet_addr("192.168.1.14");
+            // iph->check = 0;
 
             if (sendto(rawfd, buf, recv_len, 0, 
                 (struct sockaddr *)&si_local, sizeof(struct sockaddr)) < 0)

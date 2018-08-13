@@ -18,7 +18,7 @@ int set_rawsocket(void)
 {
     int sock;
 
-    if( (sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_IP))) < 0)
+    if( (sock = socket(AF_PACKET, SOCK_DGRAM, htons(ETH_P_IP))) < 0)
     {
         perror("Failed to create raw socket");
         return -1;
@@ -61,8 +61,6 @@ int main(int argc, char const *argv[])
     si_local.sin_port = htons(UDP_PORT);
     si_local.sin_addr.s_addr = htonl(INADDR_ANY);
 
-    // recv_len = recvfrom(rawfd, buf, 65536, 0, &saddr, &saddr_len);
-
     while(1)
     {
         // memset(buf, 0, sizeof(buf));
@@ -73,7 +71,7 @@ int main(int argc, char const *argv[])
         }
         else
         {
-            iph = (struct iphdr*)(buf + sizeof(struct ethhdr));
+            iph = (struct iphdr*)buf;
 
             if (GET_DEST(iph)==RAW_PORT)
             {
