@@ -2,6 +2,8 @@
 
 my practice base for code snippet reuse and sharing; unlike gist, it's for fast demo with direct results.
 
+[TOC]
+
 ## 01 Raw Socket Relay
 
 A practice on raw_socket transmission on receiving, to demo relay mechanism
