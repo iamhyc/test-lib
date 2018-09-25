@@ -14,7 +14,7 @@ A practice on raw_socket transmission on receiving, to demo relay mechanism
 
 ## 03 Timing Resolution Test
 
-providing timing mechanism, and timing resolution test confined by CPU frequency
+providing timing mechanism for both userspace and kernelspace
 
 ## 04 Debugfs/Procfs with mmap operation
 
