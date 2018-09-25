@@ -1,29 +1,20 @@
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <unistd.h>
-
-uint64_t rdtsc(){
-    unsigned int lo,hi;
-    __asm__ __volatile__ ("rdtsc" : "=a" (lo), "=d" (hi));
-    return ((uint64_t)hi << 32) | lo;
-}
+#include "timing_usr.h"
 
 int main(int argc, char const *argv[])
 {
     uint64_t t0, t1;
+    timing_unit tt;
 
     while(1)
     {
-        t0 = rdtsc();
-        // printf("%lld\n", t0);
-        
+        timing_start(tt);
         usleep(1E3);
+        timing_stop(tt);
 
-        t1 = rdtsc();
-        printf("%lld\n", t1-t0);
-
+        printf("%ld\n", tt.result);
         usleep(1E6);
     }
     
