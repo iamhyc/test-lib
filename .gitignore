@@ -8,6 +8,7 @@ __pycache__
 .tmp_versions
 .cache.mk
 .*.cmd
+.*.o.d
 *.o
 *.o.cmd
 *.ko
