@@ -5,7 +5,6 @@
 
 int main(int argc, char const *argv[])
 {
-    uint64_t t0, t1;
     timing_unit tt;
 
     while(1)
@@ -14,7 +13,7 @@ int main(int argc, char const *argv[])
         usleep(1E3);
         timing_stop(tt);
 
-        printf("%ld\n", tt.result);
+        printf("%ld.%06ld\n", tt.result.tv_sec, tt.result.tv_usec);
         usleep(1E6);
     }
     

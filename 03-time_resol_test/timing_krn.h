@@ -29,7 +29,7 @@ typedef struct
 #define timing_stop(x) \
     do { \
         getnstimeofday(&x.marker[1]); \
-        timernsub(x.marker[1], x.marker[0], x.result) \
+        timernsub(&x.marker[1], &x.marker[0], &x.result) \
     } while(0)
 
 #endif
