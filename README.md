@@ -10,7 +10,7 @@ A practice on raw_socket transmission on receiving, to demo relay mechanism
 
 ## 02 Serial Test
 
-(now only with) python version serial transmission example
+python and unix version serial transmission example
 
 ## 03 Timing Resolution Test
 
