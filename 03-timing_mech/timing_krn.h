@@ -1,5 +1,5 @@
-#ifndef __TIMING_USR_H__
-#define __TIMING_USR_H__
+#ifndef __TIMING_KRN_H__
+#define __TIMING_KRN_H__
 
 #include <linux/timekeeping.h>
 
