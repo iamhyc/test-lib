@@ -13,7 +13,6 @@
       (result)->tv_nsec += 1000000000;					      \
     }									      \
   } while (0)
-#endif	/* Misc.  */
 
 typedef struct
 {
